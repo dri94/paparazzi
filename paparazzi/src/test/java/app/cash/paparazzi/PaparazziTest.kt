@@ -101,6 +101,24 @@ class PaparazziTest {
     )
   }
 
+  @Test
+  fun onGlobalLayoutCalls() {
+    val log = mutableListOf<String>()
+
+    val view = object: View(paparazzi.context) {
+      override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        viewTreeObserver.addOnGlobalLayoutListener {
+          log += "onGlobalLayout"
+        }
+      }
+    }
+
+    paparazzi.snapshot(view)
+
+    assertThat(log).containsExactly("onGlobalLayout")
+  }
+
   private val time: Long
     get() {
       return AnimationUtils.currentAnimationTimeMillis() -
